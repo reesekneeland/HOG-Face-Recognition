@@ -1,7 +1,7 @@
 # HOG-Face-Recognition
-A face detection algorithm that uses filters and a histogram of oriented gradients.
+A face detection computer vision algorithm that uses Sobel filters, NCC thresholds, and a histogram of oriented gradients to detect faces. Prunes bounding boxes with an intersection of union overlap checking step.
 
-![image](https://user-images.githubusercontent.com/77468346/153023693-bc2798fe-3ffd-43c9-87ae-96150737f7b2.png)
+![face_recognition_cropped](https://user-images.githubusercontent.com/77468346/153030770-579c8129-a7e4-402b-93ef-f7577404ec7e.gif)
 
 ### extract_hog
 The main driver function, performs the image normalization, calls all of the other functions in the
@@ -31,3 +31,5 @@ testing every template-sized section’s HOG for a correlation match to the temp
 an NCC threshold of 0.57. It then prunes that list of bounding boxes by removing any that have
 an IoU > 0.5 with the highest scoring bounding boxes. Returns the remaining bounding boxes
 as the best candidates.
+
+![image](https://user-images.githubusercontent.com/77468346/153023693-bc2798fe-3ffd-43c9-87ae-96150737f7b2.png)
