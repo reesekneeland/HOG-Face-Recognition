@@ -106,10 +106,6 @@ def visualize_hog(im, hog, cell_size, block_size):
                    color='white', headaxislength=0, headlength=0, scale_units='xy', scale=1, width=0.002, angles='xy')
     plt.show()
 
-
-
-
-
 def face_recognition(I_target, I_template):
     I_target_c= cv2.imread('target.png')
     templateSize = len(I_template)**2
@@ -129,8 +125,12 @@ def face_recognition(I_target, I_template):
             if(NCC > 0.57):
                 bounding.append([j, i, NCC])
                 if((i+j)%10 == 0):
-                    save_face_detection(I_target_c,bounding,str(nameCt),box_size = 50)
+                    printBounding = np.array(bounding)
+                    save_face_detection(I_target_c,printBounding,str(nameCt),False,box_size = 50)
                     nameCt +=1
+    printBounding = np.array(bounding)
+    save_face_detection(I_target_c,printBounding,str(nameCt),False,box_size = 50)
+    nameCt +=1
     
     while(len(bounding)>0):
         npBounding = np.array(bounding)
@@ -141,8 +141,8 @@ def face_recognition(I_target, I_template):
         mxB = maxBB[0] + len(I_template)
         myB = maxBB[1] + len(I_template[0])
         newBounding = []
-        printList = bounding + bounding_boxes
-        save_face_detection(I_target_c,printList,str(nameCt),box_size = 50)
+        printList = np.array(bounding + bounding_boxes)
+        save_face_detection(I_target_c,printList,str(nameCt),False,box_size = 50)
         nameCt +=1
         for i in bounding:
             xA = max(mxA, i[0])
@@ -151,14 +151,12 @@ def face_recognition(I_target, I_template):
             yB = min(myB, (i[1] + len(I_template[0])))
             overlap = max(0, xB - xA + 1) * max(0, yB - yA + 1)
             IoU = overlap/(templateSize+templateSize-overlap)
-            # if((i)%10 == 0):
-            #     save_face_detection(I_target,bounding,str(nameCt),box_size = 50)
-            #     nameCt +=1
             if(IoU < 0.5):
                 newBounding.append(i)
         bounding = newBounding
     
     bounding_boxes = np.array(bounding_boxes)
+    save_face_detection(I_target_c,printList,str(nameCt),True,box_size = 50)
     return  bounding_boxes
 
 
@@ -198,7 +196,7 @@ def visualize_face_detection(I_target,bounding_boxes,box_size):
     plt.imshow(fimg, vmin=0, vmax=1)
     plt.show()
 
-def save_face_detection(I_target,bounding_boxes,Fname,box_size = 50):
+def save_face_detection(I_target,bounding_boxes,Fname,text,box_size = 50):
 
     hh,ww,cc=I_target.shape
 
@@ -227,7 +225,7 @@ def save_face_detection(I_target,bounding_boxes,Fname,box_size = 50):
         if y2>hh-1:
             y2=hh-1
         fimg = cv2.rectangle(fimg, (int(x1),int(y1)), (int(x2),int(y2)), (255, 0, 0), 1)
-        cv2.putText(fimg, "%.2f"%bounding_boxes[ii,2], (int(x1)+1, int(y1)+2), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0, 255, 0), 2, cv2.LINE_AA)
+        if(text): cv2.putText(fimg, "%.2f"%bounding_boxes[ii,2], (int(x1)+1, int(y1)+2), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0, 255, 0), 2, cv2.LINE_AA)
 
 
     plt.figure(3)
